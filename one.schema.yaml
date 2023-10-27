@@ -1,0 +1,53 @@
+$id:      https://zba.su/ditbot
+$schemma: https://json-schema.org/draft/2020-12/schema
+
+title: "Группы и их списки обсулиживания каналов"
+description:
+	Cхема главной базы данных бота для Telegram’а,
+	реализующего комментирование сообщений канала в группе с топиками.
+	CC-BY-SA 4.0 © Зажигин Богдан, 2023
+
+
+type: array
+minItems: 1
+uniqueItems: true
+
+items:
+	title: "Группа, и привязанные к ней каналы"
+	type: object
+	required:
+		- group_id
+		- whitelist
+	properties:
+		group_id:
+			title: "Идентификатор группы"
+			description: "Согласно строке «id» из core.telegram.org/bots/api#chat."
+			type: integer
+			examples:
+				- -1001969731405
+				- -1001559352883
+		whitelist:
+			type: array
+			minItems: 1
+			items:
+				type: object
+				required:
+					- channel_id
+				dependentRequired:
+					active:
+						- channel_id
+				properties:
+					channel_id:
+						title: "Идентификатор канала"
+						description: "Согласно строке «id» из core.telegram.org/bots/api#chat."
+						type: integer
+						examples:
+							- -1001973121320
+							- -1001523889521
+					active:
+						title: "Обслуживание"
+						description: "Каналы сначала добавляются к группе, как возможные для привязки к топику, и только потом должны быть активированы."
+						type: boolean
+						examples:
+							- true
+							- false
